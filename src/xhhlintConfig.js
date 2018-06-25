@@ -1,20 +1,20 @@
 let fileUtil = require('./utils/fileUtil.js');
 
 function read() {
-    let felintDirPath = fPath();
-    let felintConfig = {};
-    if (felintDirPath && felintDirPath.path) {
+    let xhhlintDirPath = fPath();
+    let xhhlintConfig = {};
+    if (xhhlintDirPath && xhhlintDirPath.path) {
         try {
-            felintConfig = require(`${felintDirPath.path}/config.js`);
+            xhhlintConfig = require(`${xhhlintDirPath.path}/config.js`);
         } catch (e) {
-            console.log('无法找到.felint/config.js，你需要先初始化');
+            console.log('无法找到.xhhlint/config.js，你需要先初始化');
         }
     }
-    return felintConfig;
+    return xhhlintConfig;
 }
 
 function fPath() {
-    return fileUtil.findUp(process.cwd(), '.felint', 'isDirectory');
+    return fileUtil.findUp(process.cwd(), '.xhhlint', 'isDirectory');
 }
 
 module.exports = {

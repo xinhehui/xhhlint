@@ -1,11 +1,11 @@
 let fileUtil = require('./utils/fileUtil.js');
 
 function read() {
-    return fileUtil.treeReadFile('.felintrc', 'json') || {};
+    return fileUtil.treeReadFile('.xhhlintrc', 'json') || {};
 }
 
 async function create(content, pathStr, force) {
-    pathStr = pathStr || `${process.cwd()}/.felintrc`;
+    pathStr = pathStr || `${process.cwd()}/.xhhlintrc`;
     if (force) {
         fileUtil.createFileSync(pathStr, content, 'json');
     } else {
@@ -23,15 +23,15 @@ async function local() {
 }
 
 function isLocal() {
-    let felintrcFile = read() || {};
-    return !!felintrcFile.local;
+    let xhhlintrcFile = read() || {};
+    return !!xhhlintrcFile.local;
 }
 
 async function set(value) {
-    let felintrcFile = read();
-    felintrcFile = felintrcFile || {};
-    Object.assign(felintrcFile, value);
-    await create(felintrcFile, null, true);
+    let xhhlintrcFile = read();
+    xhhlintrcFile = xhhlintrcFile || {};
+    Object.assign(xhhlintrcFile, value);
+    await create(xhhlintrcFile, null, true);
 }
 
 function getPlan() {

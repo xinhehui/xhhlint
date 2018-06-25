@@ -1,7 +1,7 @@
 let sh = require('shelljs');
 require('colors');
 
-let felintConfig = require('./felintConfig.js');
+let xhhlintConfig = require('./xhhlintConfig.js');
 
 let checkPackage = require('./utils/checkPackage.js');
 
@@ -70,7 +70,7 @@ function install(type, typeInfo) {
 
 // 安装配置指定的依赖
 async function installDependence() {
-    let configInfo = felintConfig.read();
+    let configInfo = xhhlintConfig.read();
     let dependenceConfig = configInfo.dependence;
     let dependenceList = dependenceConfig && Object.keys(dependenceConfig) || [];
     if (dependenceList.length) {
@@ -81,8 +81,6 @@ async function installDependence() {
         }
     }
 }
-
-installDependence();
 
 module.exports = {
     install: installDependence

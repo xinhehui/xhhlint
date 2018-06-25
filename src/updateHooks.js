@@ -1,11 +1,11 @@
 let sh = require('shelljs');
 
-let felintConfig = require('./felintConfig.js');
+let xhhlintConfig = require('./xhhlintConfig.js');
 
 function update() {
-    let initHooksFile = felintConfig.read().initHooks;
+    let initHooksFile = xhhlintConfig.read().initHooks;
     if (initHooksFile) {
-        sh.exec(`sh ./.felint/${initHooksFile}`);
+        sh.exec(`sh ./.xhhlint/${initHooksFile}`);
     }
 }
 

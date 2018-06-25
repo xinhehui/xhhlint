@@ -9,27 +9,29 @@ let fetchConfig = require('./fetchConfig.js');
 let dependence = require('./dependence.js');
 let updateHooks = require('./updateHooks.js');
 let ruleFile = require('./ruleFile.js');
-let felintrc = require('./felintrc.js');
+let xhhlintrc = require('./xhhlintrc.js');
 
 program
     .version(versionUtil.VERSION)
     .command('init')
     .option('-p, --plan [value]', '使用指定代码规范方案')
-    .description('使用felint初始化项目。更多信息请参考：https://github.com/youzan/felint/blob/master/README.md')
+    .description('使用xhhlint初始化项目。')
     .action(async (options) => {
-        let isUpdating = await versionUtil.checkUpdate();
-        // 不选择更新该 lint
+      // let isUpdating = await versionUtil.checkUpdate();
+      let isUpdating = false;
+
+      // 不选择更新该 lint
         if (!isUpdating) {
-            let felintrcFile = felintrc.read();
-            await fetchConfig(felintrcFile || {});
+            let xhhlintrcFile = xhhlintrc.read();
+            await fetchConfig(xhhlintrcFile || {});
             console.log('开始安装本地依赖...'.green);
             let msgInfo = await dependence.install();
             console.log(msgInfo.join('\n'));
             // updateHooks.update();
             // sh.exec('rm ./.eslintrc ./.scss-lint.yml');
             await ruleFile.createIgnore();
-            let plan = options.plan || felintrc.getPlan() || 'default';
-            await felintrc.set({
+            let plan = options.plan || xhhlintrc.getPlan() || 'default';
+            await xhhlintrc.set({
                 plan
             });
             ruleFile.create('plan', plan, true);
@@ -39,12 +41,12 @@ program
 // 更新配置文件和钩子
 program
     .command('update')
-    .description('更新felint的配置文件')
+    .description('更新xhhlint的配置文件')
     .action(async () => {
         let isUpdating = await versionUtil.checkUpdate();
         if (!isUpdating) {
-            let felintrcFile = felintrc.read();
-            await fetchConfig(felintrcFile || {});
+            let xhhlintrcFile = xhhlintrc.read();
+            await fetchConfig(xhhlintrcFile || {});
             console.log('开始更新依赖...'.green);
             let msgInfo = await dependence.install();
             console.log(msgInfo.join('\n'));
@@ -70,7 +72,7 @@ program
 // 调用eslint校验js
 program
     .command('lintjs [eslintParams...]')
-    .description('使用felint检测js代码')
+    .description('使用xhhlint检测js代码')
     .option('--exitcode', '使用exitcode')
     .allowUnknownOption()
     .action(function(eslintParams, options) {
@@ -122,18 +124,18 @@ program
     .command('islocal')
     .description('查看该项目是否是local项目')
     .action(() => {
-        console.log(felintrc.isLocal());
+        console.log(xhhlintrc.isLocal());
     });
 
-// 返回felint base path
+// 返回xhhlint base path
 program
     .command('where')
-    .description('返回felint安装路径')
+    .description('返回xhhlint安装路径')
     .action(() => {
         console.log(path.dirname(__dirname));
     });
 
-// felint挂钩子
+// xhhlint挂钩子
 
 program
     .command('hooks')

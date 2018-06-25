@@ -19,7 +19,7 @@ function checkUpdate() {
     let isUpdating = false;
     return new Promise((res) => {
         try {
-            olVersion = sh.exec('npm view felint@latest version', {silent: true});
+            olVersion = sh.exec('npm view xhhlint@latest version', {silent: true});
         } catch (e) {
             console.log('检查更新失败');
             res(isUpdating);
@@ -27,7 +27,7 @@ function checkUpdate() {
         olVersion = olVersion.toString().replace('\n', '');
         if (semver.gt(VERSION, olVersion) && isBetaNow) {
             try {
-                olVersion = sh.exec('npm view felint@beta version', {silent: true});
+                olVersion = sh.exec('npm view xhhlint@beta version', {silent: true});
             } catch (e) {
                 console.log('检查更新失败');
                 res(isUpdating);
@@ -41,16 +41,16 @@ function checkUpdate() {
                 input: process.stdin,
                 output: process.stdout
             });
-            rl.question(`发现felint新版本${olVersion.trim().red}，立即更新(Y/n)?`, (ans) => {
+            rl.question(`发现xhhlint新版本${olVersion.trim().red}，立即更新(Y/n)?`, (ans) => {
                 rl.close();
                 if (ans !== 'n') {
                     isUpdating = true;
 
-                    console.log('更新felint版本中...');
+                    console.log('更新xhhlint版本中...');
 
                     // const updateVersion = semver.prerelease(olVersion) ? 'beta' : 'latest';
 
-                    // sh.exec(`npm install -d -g felint@${updateVersion}`);
+                    // sh.exec(`npm install -d -g xhhlint@${updateVersion}`);
                 }
                 res(isUpdating);
             });

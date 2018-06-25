@@ -1,24 +1,24 @@
 let codePattern = `
     var child = require('child_process');
     var islocal = false;
-    var felintPath = '';
+    var xhhlintPath = '';
     try {
-        islocal = child.execSync('felint islocal', {
+        islocal = child.execSync('xhhlint islocal', {
             encoding: 'utf-8'
         }).trim() === 'true';
         if (!islocal) {
-            felintPath = child.execSync('felint where', {
+            xhhlintPath = child.execSync('xhhlint where', {
                 encoding: 'utf-8'
             }).trim() + '/node_modules/';
         }
     } catch(e) {
     }
-    var ap = islocal ? '' : felintPath;
+    var ap = islocal ? '' : xhhlintPath;
     module.exports = <%content%>
 `;
 
 let localCodePattern = 'module.exports = <%content%>';
 
-export default (content, islocal) => {
-    return islocal ? localCodePattern.replace(/<%content%>/g, content) : codePattern.replace(/<%content%>/g, content).replace(/"<%path%>/g, 'ap+"');
+module.exports = (content, islocal) => {
+  return islocal ? localCodePattern.replace(/<%content%>/g, content) : codePattern.replace(/<%content%>/g, content).replace(/"<%path%>/g, 'ap+"');
 };

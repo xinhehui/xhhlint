@@ -2,23 +2,23 @@ let sh = require('shelljs');
 
 let fileUtil = require('./utils/fileUtil.js');
 
-let stylelintCodeGenerator = require('./utils/stylelintCodeGenerator.js').default;
+let stylelintCodeGenerator = require('./utils/stylelintCodeGenerator.js');
 
-let felintrc = require('./felintrc.js');
+let xhhlintrc = require('./xhhlintrc.js');
 
-let felintConfig = require('./felintConfig.js');
+let xhhlintConfig = require('./xhhlintConfig.js');
 
 const toString = Object.prototype.toString;
 
 
-async function createPlan(felintDirPath, ruleConfig, planName, isLocal) {
+async function createPlan(xhhlintDirPath, ruleConfig, planName, isLocal) {
     if (ruleConfig && ruleConfig.plan && ruleConfig.plan[planName]) {
         let ruleList = ruleConfig.plan[planName];
         let index;
         let filename;
         for (index = ruleList.length - 1; index >= 0; index--) {
             filename = ruleList[index];
-            await createFile(felintDirPath, filename, isLocal);
+            await createFile(xhhlintDirPath, filename, isLocal);
         }
     }
 }
@@ -71,11 +71,11 @@ function mergeObject(target, another) {
 }
 
 async function createEslintrc(targetFilePath, sourceFilePath, fileName, ext) {
-    let felintrcContent = felintrc.read();
+    let xhhlintrcContent = xhhlintrc.read();
     let fileContent = '';
-    if ((ext === 'json' || ext === 'yaml' || ext === 'yml') && felintrcContent[fileName]) {
+    if ((ext === 'json' || ext === 'yaml' || ext === 'yml') && xhhlintrcContent[fileName]) {
         fileContent = await fileUtil.readFile(sourceFilePath, ext);
-        fileContent = mergeObject(fileContent, felintrcContent[fileName]);
+        fileContent = mergeObject(fileContent, xhhlintrcContent[fileName]);
         fileUtil.createFileSync(targetFilePath, JSON.stringify(fileContent || {}, null, 4), ext);
     } else {
         sh.cp(sourceFilePath, targetFilePath);
@@ -83,11 +83,11 @@ async function createEslintrc(targetFilePath, sourceFilePath, fileName, ext) {
 }
 
 async function createStylelintrc(targetFilePath, sourceFilePath, fileName, ext) {
-    let felintrcContent = felintrc.read();
+    let xhhlintrcContent = xhhlintrc.read();
     let fileContent = '';
     fileContent = await fileUtil.readFile(sourceFilePath, ext);
-    if (felintrcContent[fileName]) {
-        fileContent = mergeObject(fileContent, felintrcContent[fileName]);
+    if (xhhlintrcContent[fileName]) {
+        fileContent = mergeObject(fileContent, xhhlintrcContent[fileName]);
     }
     fileUtil.createFileSync(targetFilePath, stylelintCodeGenerator(JSON.stringify(fileContent || {}, null, 4), true), ext);
 }
@@ -96,7 +96,7 @@ async function createStylelintrc(targetFilePath, sourceFilePath, fileName, ext) 
  * 文件名命名规则
  * 最终产生规则文件
  */
-async function createFile(felintDirPath, fileName) {
+async function createFile(xhhlintDirPath, fileName) {
     if (fileName) {
         let ext = fileUtil.getFileExtension(fileName).toLowerCase();
         let fileNE = fileName.slice(0, ext.length ? (-ext.length - 1) : fileName.length);
@@ -105,7 +105,7 @@ async function createFile(felintDirPath, fileName) {
             targetFilePath = `${process.cwd()}/${fileNE.split('_')[0]}.js`;
         }
         let override = await fileUtil.checkOverride(targetFilePath);
-        let sourceFilePath = `${felintDirPath}/rules/${fileName}`;
+        let sourceFilePath = `${xhhlintDirPath}/rules/${fileName}`;
         if (override) {
             // override
             if (fileNE.indexOf('stylelint') > -1) {
@@ -119,36 +119,36 @@ async function createFile(felintDirPath, fileName) {
     }
 }
 
-// 读取.felint里面的
+// 读取.xhhlint里面的
 function create(type, name, isLocal) {
-    let felintDirPath = felintConfig.fPath();
-    if (felintDirPath && felintDirPath.path) {
-        let config = felintConfig.read();
+    let xhhlintDirPath = xhhlintConfig.fPath();
+    if (xhhlintDirPath && xhhlintDirPath.path) {
+        let config = xhhlintConfig.read();
         if (type === 'plan') {
-            createPlan(felintDirPath.path, config, name, isLocal);
+            createPlan(xhhlintDirPath.path, config, name, isLocal);
         } else {
-            createFile(felintDirPath.path, name, isLocal);
+            createFile(xhhlintDirPath.path, name, isLocal);
         }
     }
 }
 
 async function createIgnore() {
-    let felintDirPath = felintConfig.fPath();
-    if (felintDirPath && felintDirPath.path) {
-        // 查看.felint下有无.eslintignore文件
-        let hasEslintIgnoreFile = fileUtil.has(`${felintDirPath.path}/.eslintignore`);
+    let xhhlintDirPath = xhhlintConfig.fPath();
+    if (xhhlintDirPath && xhhlintDirPath.path) {
+        // 查看.xhhlint下有无.eslintignore文件
+        let hasEslintIgnoreFile = fileUtil.has(`${xhhlintDirPath.path}/.eslintignore`);
         if (hasEslintIgnoreFile) {
             let override = await fileUtil.checkOverride(`${process.cwd()}/.eslintignore`);
             if (override) {
-                sh.cp(`${felintDirPath.path}/.eslintignore`, `${process.cwd()}/.eslintignore`);
+                sh.cp(`${xhhlintDirPath.path}/.eslintignore`, `${process.cwd()}/.eslintignore`);
             }
         }
-        // 查看.felint下有无.stylelintignore文件
-        let hasStylelintIgnoreFile = fileUtil.has(`${felintDirPath.path}/.stylelintignore`);
+        // 查看.xhhlint下有无.stylelintignore文件
+        let hasStylelintIgnoreFile = fileUtil.has(`${xhhlintDirPath.path}/.stylelintignore`);
         if (hasStylelintIgnoreFile) {
             let override = await fileUtil.checkOverride(`${process.cwd()}/.stylelintignore`);
             if (override) {
-                sh.cp(`${felintDirPath.path}/.stylelintignore`, `${process.cwd()}/.stylelintignore`);
+                sh.cp(`${xhhlintDirPath.path}/.stylelintignore`, `${process.cwd()}/.stylelintignore`);
             }
         }
     }
