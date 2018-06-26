@@ -17,8 +17,7 @@ program
     .option('-p, --plan [value]', '使用指定代码规范方案')
     .description('使用xhhlint初始化项目。')
     .action(async (options) => {
-      // let isUpdating = await versionUtil.checkUpdate();
-      let isUpdating = false;
+      let isUpdating = await versionUtil.checkUpdate();
 
       // 不选择更新该 lint
         if (!isUpdating) {

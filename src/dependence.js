@@ -12,7 +12,7 @@ function installPackage(packageName, version) {
     if (!result) {
         try {
             console.log(`开始安装${packageName}@${version}`.green);
-            // sh.exec(`npm install -d ${packageName}@${version} --save-dev`);
+            sh.exec(`npm install -d ${packageName}@${version} --save-dev`);
         } catch (e) {
             console.log(`${packageName}@${version}安装失败，请检查`.red);
         }
@@ -55,13 +55,13 @@ function install(type, typeInfo) {
             addDevDependence(typeInfo);
             res(msgInfo);
         } else if (typeInfo.install) {
-            // let child = sh.exec(typeInfo.install, {async: true, stdio: 'inherit'});
-            // child.on('exit', (code) => {
-            //     if (code !== 0) {
-            //         console.log('有依赖安装失败，请检查!'.red);
-            //     }
-            //     res();
-            // });
+            let child = sh.exec(typeInfo.install, {async: true, stdio: 'inherit'});
+            child.on('exit', (code) => {
+                if (code !== 0) {
+                    console.log('有依赖安装失败，请检查!'.red);
+                }
+                res();
+            });
         } else {
             res();
         }
