@@ -17,7 +17,7 @@
         "arrow-body-style": 0,
         "no-param-reassign": 0,
         "no-return-assign": 0,
-        "indent": [1, 4, { "SwitchCase": 1}],
+        "indent": [1, 2, { "SwitchCase": 1}],
         "no-console": 0,
         "no-underscore-dangle": [1, { "allowAfterThis": true }],
         "consistent-return": 0,
